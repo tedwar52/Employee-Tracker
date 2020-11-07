@@ -81,8 +81,26 @@ function start() {
 //--------------SELECTION: VIEW ALL EMPLOYEES-----------------------------
 
 function viewEmployees() {
-   //var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
-    //query += "FROM employee OUTER JOIN role ON (employee.role_id = role.id) ";
+   //1 var query = "SELECT * FROM employee"
+   
+    //2 var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee, role, department "
+    //4 query+= "ON (department.id = role.department_id, role.id = employee.role_id)";
+    //3 query+= "WHERE employee.role_id = role.id, role.department_id = department.id";
+    //5 query+= "ON empoloyee.role_id = role.id, role.department_id = department.id"
+
+    //6 var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee JOIN role ON employee.role_id=role.id";
+
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id"; 
+
+
+    //---------NOTES-----------
+        //running just query 1 returns a table with only the employee values
+        //running just query 2 returns a table repeating ton mixing all the variables (not matched in lines)
+        //running query2&3 returns nothing
+        //running query2&4 returns nothing
+        //running query2&5 returns nothing
+        //running query 6 RETURNS THE RIGHT TABLE (only two combined)!!
+        //running query 7 returns correct table... but after logging the top of the table (labels)
 
     
     //connection.query(query, function(err, res) {
@@ -94,10 +112,17 @@ function viewEmployees() {
    // }); 
     //console.log(table.query)
 
-    connection.query("SELECT * FROM employee", function (err, res) {
+    connection.query(query, function (err, res) {
         if (err) throw err;
-        var values = res;
-        console.table(["id", "first_name", "last_name"], values);
+        console.table([], res);
+
+        //--------NOTES----------
+            //running the console.table in the for loop returns everything mismatched (aka taylor runs 15 times with each possible combination) 10 times
+            //running the console.table with a loop, but outside of it runs the same as the next scenario
+            //running the console.table without a loop returns everything mismatched (aka taylor runs 15 with each possible combination)
+
+            //conclusion: my FK aren't lining up. Need to assign to ids. No loop needed
+       
     })
 
     start();
