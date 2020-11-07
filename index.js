@@ -1,8 +1,8 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const console = require("console.table");
-
-const log = (msg) => console.log(msg);
+const Roles = require("./viewRoles.js");
+const Departs = require("./viewDepartments.js")
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -44,10 +44,10 @@ function start() {
                 break;
 
             case "View all employees by department":
-                viewDepartments();
+                Departs.viewDeparts();
                 break;
             case "View all employees by role":
-                viewRoles();
+                Roles.viewRoles();
                 break;
             case "Add employee":
                 addEmployee();
@@ -79,79 +79,12 @@ function viewEmployees() {
 
     start();
 }
+//ENTER VIEW DEPARTMENTS HERE
 
-function viewDepartments() {
-    inquirer
-        .prompt({
-            name: "department",
-            type: "list",
-            message: "Which department would you like to look at?",
-            choices: [
-                "Sales",
-                "Legal",
-                "Development",
-                "Go Back"
-            ]
-        })
-        .then(function(answer) {
-            switch(answer.department) {
-                case "Sales":
-                    viewSales();
-                    break;
-                case "Legal":
-                    viewLegal();
-                    break;
-                case "Development":
-                    viewDevelopment();
-                    break;
-                case "Go Back":
-                    start();
-                    break;
-                    //consider sending back to previous menu
-            }
-        });
-}
 //external file for individual search returns
 
-function viewRoles() {
-    inquirer
-        .prompt({
-            name: "role",
-            type: "list",
-            message: "Which role would you like to look at?",
-            choices: [
-                "Lead Salesperson",
-                "Salesperson",
-                "Lead Developer",
-                "Developer",
-                "Lawyer",
-                "Go Back"
-            ]
-        })
-        .then(function(answer) {
-            switch(answer.role) {
-                case "Lead Salesperson":
-                    viewLS();
-                    break;
-                case "Salesperson":
-                    viewS();
-                    break;
-                case "Lead Developer":
-                    viewLD();
-                    break;
-                case "Developer":
-                    viewD();
-                    break;
-                case "Lawyer":
-                    viewLawyer();
-                    break;
-                case "Go Back":
-                    start();
-                    break;
-                    //consider sending back to previous menu
-            }
-        })
-}
+//ENTER VIEW ROLES FUNCTION HERE
+
 //external file for search returns
 
 function addEmployee() {
