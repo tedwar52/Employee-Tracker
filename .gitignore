@@ -1,3 +1,5 @@
 node_modules
 /Assets
 README.md
+viewDepartments.js
+viewRoles.js

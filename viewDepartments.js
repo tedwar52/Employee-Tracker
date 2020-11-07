@@ -42,7 +42,7 @@ function viewDepartments() {
         });
 }
 
-function viewDPTS() {
+function departmentQuery() {
     var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
     query += "FROM employee INNER JOIN role ON (employee.role_id = role.id) ";
     query += "WHERE department.name = ?";
@@ -55,4 +55,12 @@ function viewDPTS() {
     });
 }
 
+function departmentquery() {
+    var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
+    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id) ";
+    query += "WHERE department.name = ?";
+    
+}
+//CREATE CONSTRUCTOR THAT JUST DOES THE SEARCH
+//function new CONSTRUCTORNAME("whichever department")
 module.exports = viewDepartments();
