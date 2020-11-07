@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const console = require("console.table");
+const cTable = require("console.table");
 //const Roles = require("./viewRoles.js");
 //const Departs = require("./viewDepartments.js");
 //const employeeQuery = require('./employeesearch.js');
@@ -18,8 +18,16 @@ connection.connect(function(err) {
     start();
 });
 
-//const table = cTable.getTable([
-// ]);
+const table = cTable.getTable(
+    {
+        //first_name: "SELECT first_name FROM employee",
+        //last_name: "SELECT last_name FROM employee",
+        //title: "SELECT title FROM role",
+        //department: "SELECT name FROM department",
+        //salary: "SELECT salary FROM role"
+    }
+);
+
 //HOW TO RETURN RESULTS AS A TABLE
 
 //---------------------START APPLICATION-------------------------------
@@ -73,18 +81,24 @@ function start() {
 //--------------SELECTION: VIEW ALL EMPLOYEES-----------------------------
 
 function viewEmployees() {
-    var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
-    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id) ";
+   //var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
+    //query += "FROM employee OUTER JOIN role ON (employee.role_id = role.id) ";
 
-    var query = "SELECT * FROM employee"
+    
+    //connection.query(query, function(err, res) {
+       // if (err) throw err;
+       // for (var i = 0; i < res.length; i++) {
+        //    console.log(res)
+       // }
+        //console.log(query.sql);
+   // }); 
+    //console.log(table.query)
 
-    connection.query(query, function(err, res) {
+    connection.query("SELECT * FROM employee", function (err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            console.log(res)
-        }
-    });
-
+        var values = res;
+        console.table(["id", "first_name", "last_name"], values);
+    })
 
     start();
 }
@@ -315,3 +329,7 @@ function updateRole() {
 
 //display updated tables after updating, adding, and removing employees
 //end of each function just call viewEmployees();
+
+//HOW TO OVERLAP THIRD TABLE???
+
+//HOW TO RETURN TABLE
