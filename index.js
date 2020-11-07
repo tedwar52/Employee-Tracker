@@ -17,6 +17,10 @@ connection.connect(function(err) {
     start();
 });
 
+//const table = cTable.getTable([
+// ]);
+//HOW TO RETURN RESULTS AS A TABLE
+
 function start() {
     inquirer
         .prompt({
@@ -69,4 +73,133 @@ function viewEmployees() {
         log(result);
     });
     start();
+}
+
+function viewDepartments() {
+    inquirer
+        .prompt({
+            name: "department",
+            type: "list",
+            message: "Which department would you like to look at?",
+            choices: [
+                "Sales",
+                "Legal",
+                "Development",
+                "Exit"
+            ]
+        })
+        .then(function(answer) {
+            switch(answer.department) {
+                case "Sales":
+                    viewSales();
+                    break;
+                case "Legal":
+                    viewLegal();
+                    break;
+                case "Development":
+                    viewDevelopment();
+                    break;
+                case "Exit":
+                    connection.end();
+                    break;
+                    //consider sending back to previous menu
+            }
+        });
+}
+//external file for individual search returns
+
+function viewRoles() {
+    inquirer
+        .prompt({
+            name: "role",
+            type: "list",
+            message: "Which role would you like to look at?",
+            choices: [
+                "Lead Salesperson",
+                "Salesperson",
+                "Lead Developer",
+                "Developer",
+                "Lawyer",
+                "Exit"
+            ]
+        })
+        .then(function(answer) {
+            switch(answer.role) {
+                case "Lead Salesperson":
+                    viewLS();
+                    break;
+                case "Salesperson":
+                    viewS();
+                    break;
+                case "Lead Developer":
+                    viewLD();
+                    break;
+                case "Developer":
+                    viewD();
+                    break;
+                case "Lawyer":
+                    viewLawyer();
+                    break;
+                case "Exit":
+                    connection.end();
+                    break;
+                    //consider sending back to previous menu
+            }
+        })
+}
+//external file for search returns
+
+function addEmployee() {
+    //needs to return input fields
+    //first name, last name, role
+    inquirer
+        .prompt(
+            {
+                name: "firstname",
+                type: "input",
+                message: "What is their first name?"
+            },
+            {
+                name: "lastname",
+                type: "input",
+                message: "What is their last name?"
+            },
+            {
+                name: "title",
+                type: "input",
+                message: "What is their title? (Salesperson, Lead Salesperson, Developer, Lead Developer, or Lawyer)"
+            }
+        )
+        .then(function(answer) {
+            //insert each answer into respective slot of table
+            //return updated playlist
+        });
+}
+
+function removeEmployee() {
+    inquirer
+        .prompt({
+            name: "who",
+            type: "input",
+            message: "Who would you like to remove? (Search by last name)"
+        })
+        .then(function(answer) {
+            //search by last name
+            //remove user from schema
+            //return updated database
+        });
+}
+
+function updateRole() {
+    inquirer
+        .prompt({
+            name: "changeTitle",
+            type: "input",
+            message: "Who's information would you like to update? (Search by last name)"
+        })
+        .then(function(answer) {
+            //search by last name
+            //update information in specific user
+            //return updated database
+        })
 }

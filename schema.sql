@@ -44,3 +44,21 @@ INSERT INTO employee (first_name, last_name)
 VALUES ("Tessa", "Gardner");
 INSERT INTO employee (first_name, last_name)
 VALUES ("Kevin", "Bell");
+
+INSERT INTO role (title, salary, department_id)
+VALUES ("Salesperson", 30000, "Sales");
+INSERT INTO role (title, salary, department_id)
+VALUES ("Lead Developer", 65000, "Development");
+INSERT INTO role (title, salary, department_id)
+VALUES ("Developer", 45000, "Development");
+INSERT INTO role (title, salary, department_id)
+VALUES ("Lawyer", 50000, "Legal");
+INSERT INTO role (title, salary, department_id)
+VALUES ("Lead Salesperson", 33000, "Sales");
+
+INSERT INTO department (name)
+VALUES ("Sales");
+INSERT INTO department (name)
+VALUES ("Legal");
+INSERT INTO department (name)
+VALUES ("Development");
