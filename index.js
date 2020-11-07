@@ -66,12 +66,17 @@ function start() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM employee", (err, result) => {
-        if (err) {
-            log(err);
+    var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
+    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id)";
+
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res)
         }
-        log(result);
     });
+
+
     start();
 }
 
@@ -85,7 +90,7 @@ function viewDepartments() {
                 "Sales",
                 "Legal",
                 "Development",
-                "Exit"
+                "Go Back"
             ]
         })
         .then(function(answer) {
@@ -99,8 +104,8 @@ function viewDepartments() {
                 case "Development":
                     viewDevelopment();
                     break;
-                case "Exit":
-                    connection.end();
+                case "Go Back":
+                    start();
                     break;
                     //consider sending back to previous menu
             }
@@ -120,7 +125,7 @@ function viewRoles() {
                 "Lead Developer",
                 "Developer",
                 "Lawyer",
-                "Exit"
+                "Go Back"
             ]
         })
         .then(function(answer) {
@@ -140,8 +145,8 @@ function viewRoles() {
                 case "Lawyer":
                     viewLawyer();
                     break;
-                case "Exit":
-                    connection.end();
+                case "Go Back":
+                    start();
                     break;
                     //consider sending back to previous menu
             }
