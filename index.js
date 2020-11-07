@@ -81,51 +81,14 @@ function start() {
 //--------------SELECTION: VIEW ALL EMPLOYEES-----------------------------
 
 function viewEmployees() {
-   //1 var query = "SELECT * FROM employee"
-   
-    //2 var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee, role, department "
-    //4 query+= "ON (department.id = role.department_id, role.id = employee.role_id)";
-    //3 query+= "WHERE employee.role_id = role.id, role.department_id = department.id";
-    //5 query+= "ON empoloyee.role_id = role.id, role.department_id = department.id"
-
-    //6 var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee JOIN role ON employee.role_id=role.id";
-
     var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id"; 
-
-
-    //---------NOTES-----------
-        //running just query 1 returns a table with only the employee values
-        //running just query 2 returns a table repeating ton mixing all the variables (not matched in lines)
-        //running query2&3 returns nothing
-        //running query2&4 returns nothing
-        //running query2&5 returns nothing
-        //running query 6 RETURNS THE RIGHT TABLE (only two combined)!!
-        //running query 7 returns correct table... but after logging the top of the table (labels)
-
-    
-    //connection.query(query, function(err, res) {
-       // if (err) throw err;
-       // for (var i = 0; i < res.length; i++) {
-        //    console.log(res)
-       // }
-        //console.log(query.sql);
-   // }); 
-    //console.log(table.query)
 
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table([], res);
+    });
 
-        //--------NOTES----------
-            //running the console.table in the for loop returns everything mismatched (aka taylor runs 15 times with each possible combination) 10 times
-            //running the console.table with a loop, but outside of it runs the same as the next scenario
-            //running the console.table without a loop returns everything mismatched (aka taylor runs 15 with each possible combination)
-
-            //conclusion: my FK aren't lining up. Need to assign to ids. No loop needed
-       
-    })
-
-    start();
+    end.connection();
 }
 
 //---------------SELECTION: VIEW BY DEPARTMENT-----------------------------
@@ -231,8 +194,7 @@ function addEmployee() {
         )
         .then(function(answer) {
             //insert each answer into respective slot of table
-            //return updated playlist
-            var query = "INSERT INTO employee.first_name, employee.last_name, role.title VALUES ?"
+            var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE ?, ?, ?"
             connection.query(query, [
                 {
                     first_name: answer.firstname,
@@ -242,6 +204,9 @@ function addEmployee() {
             function(err, res) {
                 if (err) throw err;
             });
+
+            //display all employees
+            viewEmployees();
         });
 }
 
@@ -256,7 +221,22 @@ function removeEmployee() {
         })
         .then(function(employeeQuery, answer) {
             //search by last name
-            //remove user from schema
+            
+            //employeeQuery(answer);
+            //function deletePerson() {
+                //console.log("Deleting employee...");
+                //connection.query("DELETE FROM employee WHERE ?", 
+                //{
+                    //last_name: chosen
+                //},
+                //function(err, res) {
+                    //if (err) throw err;
+                    //console.log("Employee deleted!");
+                    //viewEmployees();
+                //});
+            //}
+
+            //remove user from database
             //return updated database
         });
 }
@@ -268,7 +248,7 @@ function employeeQuery() {
         .prompt({
             name: "changeTitle",
             type: "input",
-            message: "Who's information would you like to update? (Search by last name)"
+            message: "Which employee would you like to look up? (Search by last name)"
         })
         .then(function(answer) {
             //search by last name
@@ -284,7 +264,8 @@ function employeeQuery() {
                 updateRole();
             });
         });
-            //return updated database     
+    //return updated database 
+    viewEmployees();    
 }
 
 function updateRole() {
@@ -344,6 +325,14 @@ function updateRole() {
 
 //----------------------------------------------------------------------
 
+//TO DO
+
+//FIX UPDATEROLE() FUNCTION -- broken syntax
+//FIX DELETE FUNCTION (will need a search query and a remove function)
+//CREATE ADD EMPLOYEE FUNCTION
+
+
+//-----------------------------------------------
 //NOTES FOR IMPROVEMENT:
 
 //consider making employee query a constructor of sorts to be used for updating roles & deleting employees...
@@ -354,7 +343,3 @@ function updateRole() {
 
 //display updated tables after updating, adding, and removing employees
 //end of each function just call viewEmployees();
-
-//HOW TO OVERLAP THIRD TABLE???
-
-//HOW TO RETURN TABLE
