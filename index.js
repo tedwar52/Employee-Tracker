@@ -305,3 +305,13 @@ function updateRole() {
 
 //----------------------------------------------------------------------
 
+//NOTES FOR IMPROVEMENT:
+
+//consider making employee query a constructor of sorts to be used for updating roles & deleting employees...
+//new employeeQuery("last_name")
+
+//consider making update role a constructor of sorts to be called in the switch/case
+//case "Lawyer": new newRole(4)
+
+//display updated tables after updating, adding, and removing employees
+//end of each function just call viewEmployees();
