@@ -1,8 +1,8 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const console = require("console.table");
-const Roles = require("./viewRoles.js");
-const Departs = require("./viewDepartments.js")
+//const Roles = require("./viewRoles.js");
+//const Departs = require("./viewDepartments.js");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -44,10 +44,12 @@ function start() {
                 break;
 
             case "View all employees by department":
-                Departs.viewDeparts();
+                //Departs.viewDeparts();
+                viewDepartments();
                 break;
             case "View all employees by role":
-                Roles.viewRoles();
+                //Roles.viewRoles();
+                viewRoles();
                 break;
             case "Add employee":
                 addEmployee();
@@ -67,7 +69,7 @@ function start() {
 
 function viewEmployees() {
     var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name ";
-    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id)";
+    query += "FROM employee INNER JOIN role ON (employee.role_id = role.id) ";
 
     connection.query(query, function(err, res) {
         if (err) throw err;
@@ -111,7 +113,16 @@ function addEmployee() {
         .then(function(answer) {
             //insert each answer into respective slot of table
             //return updated playlist
-            
+            var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE ?"
+            connection.query(query, [
+                {
+                    first_name: answer.firstname,
+                    last_name: answer.lastname,
+                    role: answer.title
+                }],
+            function(err, res) {
+                if (err) throw err;
+            });
         });
 }
 
