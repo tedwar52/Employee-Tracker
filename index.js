@@ -253,54 +253,56 @@ function removeEmployee() {
                 console.log("employee deleted!");
                 start();
             })
-            //search by last name
-
-            //employeeQuery(answer);
-            //function deletePerson() {
-            //console.log("Deleting employee...");
-            //connection.query("DELETE FROM employee WHERE ?", 
-            //{
-            //last_name: chosen
-            //},
-            //function(err, res) {
-            //if (err) throw err;
-            //console.log("Employee deleted!");
-            //viewEmployees();
-            //});
-            //}
-
-            //remove user from database
-            //return updated database
+           
         });
 }
 
 //------------SELECTION: UPDATE ROLE---------------------------------------
 
 function employeeQuery() {
+   // var emps = "SELECT first_name, last_name, role.title FROM employee JOIN role ON employee.role_id=role.id";
+    //var employees = [{
+      //  firstname: emps.first_name,
+      //  lastname: emps.last_name,
+      //  role: emps.title
+    //}]
+    //connection.query(employees, function(err, res) {
+      //  if (err) throw err;
+      //  for (var i = 0; i < res.length; i++) {
+        //    return employees;
+       // }
+    //});
     inquirer
         .prompt({
             name: "changeTitle",
             type: "input",
             message: "Which employee would you like to look up? (Search by last name)"
+            //choices: [{employees}]
         })
         .then(function (answer) {
             //search by last name
-            var query = "SELECT * FROM employee where last_name=?";
+            var query = "SELECT employee.first_name, employee.last_name, role.title FROM employee JOIN role ON employee.role_id=role.id WHERE ?";
             connection.query(query, [{
-                last_name: answer.lastname
+                last_name: answer.changeTitle
             }], function (err, res) {
                 if (err) throw err;
-                console.log(res[0])
+                console.table(res[0]);
+                updateRole();
                 if (res[0] == undefined) {
-                    console.log("No employee found by that name!")
-                    start();
+                    console.log("No employee found by that name!");
+                    employeeQuery();
                 }
                 //update information in specific user
-                updateRole();
+                //updateRole();
             });
         });
+    //const employees = [{
+      //  firstname: table.first_name,
+        //lastname: table.last_name,
+       // role: table.title
+    //}]
     //return updated database 
-    viewEmployees();
+    //viewEmployees();
 }
 
 function updateRole() {
