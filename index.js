@@ -4,7 +4,7 @@ const cTable = require("console.table");
 //const Roles = require("./viewRoles.js");
 //const Departs = require("./viewDepartments.js");
 //const employeeQuery = require('./employeesearch.js');
-const roleQuery = require("./roleQuery.js");
+//const roleQuery = require("./roleQuery.js");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -14,20 +14,18 @@ const connection = mysql.createConnection({
     database: "work_db"
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
     if (err) throw err;
     start();
 });
 
-const table = cTable.getTable(
-    {
-        //first_name: "SELECT first_name FROM employee",
-        //last_name: "SELECT last_name FROM employee",
-        //title: "SELECT title FROM role",
-        //department: "SELECT name FROM department",
-        //salary: "SELECT salary FROM role"
-    }
-);
+const table = cTable.getTable({
+    //first_name: "SELECT first_name FROM employee",
+    //last_name: "SELECT last_name FROM employee",
+    //title: "SELECT title FROM role",
+    //department: "SELECT name FROM department",
+    //salary: "SELECT salary FROM role"
+});
 
 //HOW TO RETURN RESULTS AS A TABLE
 
@@ -49,32 +47,32 @@ function start() {
                 "Exit"
             ]
         })
-        .then(function(answer) {
+        .then(function (answer) {
             switch (answer.action) {
-            case "View all employees":
-                viewEmployees();
-                break;
+                case "View all employees":
+                    viewEmployees();
+                    break;
 
-            case "View all employees by department":
-                //Departs.viewDeparts();
-                viewDepartments();
-                break;
-            case "View all employees by role":
-                //Roles.viewRoles();
-                viewRoles();
-                break;
-            case "Add employee":
-                addEmployee();
-                break;
-            case "Remove employee":
-                removeEmployee();
-                break;
-            case "Update employee role":
-                employeeQuery();
-                break;
-            case "Exit":
-                connection.end();
-                break;
+                case "View all employees by department":
+                    //Departs.viewDeparts();
+                    viewDepartments();
+                    break;
+                case "View all employees by role":
+                    //Roles.viewRoles();
+                    viewRoles();
+                    break;
+                case "Add employee":
+                    addEmployee();
+                    break;
+                case "Remove employee":
+                    removeEmployee();
+                    break;
+                case "Update employee role":
+                    employeeQuery();
+                    break;
+                case "Exit":
+                    connection.end();
+                    break;
             }
         });
 }
@@ -82,7 +80,7 @@ function start() {
 //--------------SELECTION: VIEW ALL EMPLOYEES-----------------------------
 
 function viewEmployees() {
-    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id"; 
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id";
 
     connection.query(query, function (err, res) {
         if (err) throw err;
@@ -107,8 +105,8 @@ function viewDepartments() {
                 "Go Back"
             ]
         })
-        .then(function(answer) {
-            switch(answer.department) {
+        .then(function (answer) {
+            switch (answer.department) {
                 case "Sales":
                     viewSales();
                     break;
@@ -144,55 +142,50 @@ function viewRoles() {
                 "Go Back"
             ]
         })
-        .then(function(answer) {
-            switch(answer.role) {
+        .then(function (answer) {
+            switch (answer.role) {
                 case "Lead Salesperson":
-                    //const leadSales = new roleQuery(5)
-                    //leadSales.runSearch();
-                    searchLawyer();
+                    leadSales.runSearch();
                     break;
                 case "Salesperson":
-                    roleQuery();
+                    sales.runSearch();
                     break;
                 case "Lead Developer":
-                    roleQuery();
+                    leadDev.runSearch();
                     break;
                 case "Developer":
-                    roleQuery();
+                    dev.runSearch();
                     break;
                 case "Lawyer":
-                    searchLawyer();
+                    law.runSearch();
                     break;
                 case "Go Back":
                     start();
                     break;
                     //consider sending back to previous menu
             }
+        });
+
+    function roleQuery(number) {
+        this.number = number;
+    }    
+
+    roleQuery.prototype.runSearch = function () {
+        var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.id = ?";
+
+        connection.query(query, this.number, function (err, res) {
+            if (err) throw err;
+            console.table([], res);
         })
+    }
+    const leadSales = new roleQuery(5);
+    const sales = new roleQuery(1);
+    const leadDev = new roleQuery(2);
+    const dev = new roleQuery(3);
+    const law = new roleQuery(4);
+
+    //make it go back to start menu AFTER returning results
 }
-
-function searchLawyer() {
-    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.id = ?";
-    
-    connection.query(query, [4], function (err, res) {
-        if (err) throw err;
-        console.table([], res);
-    })
-}
-//function roleQuery() {
-   // var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.title = ?"; 
-
-   // const choice = {
-     //   choice: role.choices.val()
-    //}
-
-    //connection.query(query, function (err, res) {
-      //  if (err) throw err;
-        //console.table([], res);
-    //});
-
-    //start();
-//}
 
 
 //---------------SELECTION: ADD EMPLOYEE-----------------------------------
@@ -201,35 +194,30 @@ function addEmployee() {
     //needs to return input fields
     //first name, last name, role
     inquirer
-        .prompt(
-            {
-                name: "firstname",
-                type: "input",
-                message: "What is their first name?"
-            },
-            {
-                name: "lastname",
-                type: "input",
-                message: "What is their last name?"
-            },
-            {
-                name: "title",
-                type: "input",
-                message: "What is their title? (Salesperson, Lead Salesperson, Developer, Lead Developer, or Lawyer)"
-            }
-        )
-        .then(function(answer) {
+        .prompt({
+            name: "firstname",
+            type: "input",
+            message: "What is their first name?"
+        }, {
+            name: "lastname",
+            type: "input",
+            message: "What is their last name?"
+        }, {
+            name: "title",
+            type: "input",
+            message: "What is their title? (Salesperson, Lead Salesperson, Developer, Lead Developer, or Lawyer)"
+        })
+        .then(function (answer) {
             //insert each answer into respective slot of table
             var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE ?, ?, ?"
-            connection.query(query, [
-                {
+            connection.query(query, [{
                     first_name: answer.firstname,
                     last_name: answer.lastname,
                     role: answer.title
                 }],
-            function(err, res) {
-                if (err) throw err;
-            });
+                function (err, res) {
+                    if (err) throw err;
+                });
 
             //display all employees
             viewEmployees();
@@ -245,21 +233,21 @@ function removeEmployee() {
             type: "input",
             message: "Who would you like to remove? (Search by last name)"
         })
-        .then(function(employeeQuery, answer) {
+        .then(function (employeeQuery, answer) {
             //search by last name
-            
+
             //employeeQuery(answer);
             //function deletePerson() {
-                //console.log("Deleting employee...");
-                //connection.query("DELETE FROM employee WHERE ?", 
-                //{
-                    //last_name: chosen
-                //},
-                //function(err, res) {
-                    //if (err) throw err;
-                    //console.log("Employee deleted!");
-                    //viewEmployees();
-                //});
+            //console.log("Deleting employee...");
+            //connection.query("DELETE FROM employee WHERE ?", 
+            //{
+            //last_name: chosen
+            //},
+            //function(err, res) {
+            //if (err) throw err;
+            //console.log("Employee deleted!");
+            //viewEmployees();
+            //});
             //}
 
             //remove user from database
@@ -276,10 +264,12 @@ function employeeQuery() {
             type: "input",
             message: "Which employee would you like to look up? (Search by last name)"
         })
-        .then(function(answer) {
+        .then(function (answer) {
             //search by last name
             var query = "SELECT * FROM employee where last_name=?";
-            connection.query(query, [ {last_name: answer.lastname} ], function (err, res) {
+            connection.query(query, [{
+                last_name: answer.lastname
+            }], function (err, res) {
                 if (err) throw err;
                 console.log(res[0])
                 if (res[0] == undefined) {
@@ -291,7 +281,7 @@ function employeeQuery() {
             });
         });
     //return updated database 
-    viewEmployees();    
+    viewEmployees();
 }
 
 function updateRole() {
@@ -308,38 +298,38 @@ function updateRole() {
                 "Lawyer"
             ]
         })
-        .then(function(answer) {
-            switch(answer.change){
+        .then(function (answer) {
+            switch (answer.change) {
                 case "Salesperson":
-                    connection.query("UPDATE title WHERE department = ?", [1], function(err, res) {
+                    connection.query("UPDATE title WHERE department = ?", [1], function (err, res) {
                         if (err) throw err;
                         console.log("Employer updated!");
                         start();
                     });
                     break;
                 case "Lead Salesperson":
-                    connection.query("UPDATE title WHERE department = ?" [5], function(err, res) {
+                    connection.query("UPDATE title WHERE department = ?" [5], function (err, res) {
                         if (err) throw err;
                         console.log("Employer updated!");
                         start();
                     });
                     break;
                 case "Developer":
-                    connection.query("UPDATE title WHERE department = ?" [3], function(err, res) {
+                    connection.query("UPDATE title WHERE department = ?" [3], function (err, res) {
                         if (err) throw err;
                         console.log("Employer updated!");
                         start();
                     });
                     break;
                 case "Lead Developer":
-                    connection.query("UPDATE title WHERE department = ?" [2], function(err, res) {
+                    connection.query("UPDATE title WHERE department = ?" [2], function (err, res) {
                         if (err) throw err;
                         console.log("Employer updated!");
                         start();
                     });
                     break;
                 case "Lawyer":
-                    connection.query("UPDATE title WHERE department = ?" [4], function(err, res) {
+                    connection.query("UPDATE title WHERE department = ?" [4], function (err, res) {
                         if (err) throw err;
                         console.log("Employer updated!");
                         start();
