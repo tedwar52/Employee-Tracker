@@ -4,6 +4,7 @@ const cTable = require("console.table");
 //const Roles = require("./viewRoles.js");
 //const Departs = require("./viewDepartments.js");
 //const employeeQuery = require('./employeesearch.js');
+const roleQuery = require("./roleQuery.js");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -88,7 +89,7 @@ function viewEmployees() {
         console.table([], res);
     });
 
-    end.connection();
+    start();
 }
 
 //---------------SELECTION: VIEW BY DEPARTMENT-----------------------------
@@ -166,6 +167,21 @@ function viewRoles() {
                     //consider sending back to previous menu
             }
         })
+}
+
+function roleQuery() {
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.title = ?"; 
+
+   // const choice = {
+     //   choice: role.choices.val()
+    //}
+
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table([], res);
+    });
+
+    start();
 }
 
 
