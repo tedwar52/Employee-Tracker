@@ -147,19 +147,21 @@ function viewRoles() {
         .then(function(answer) {
             switch(answer.role) {
                 case "Lead Salesperson":
-                    roleQuery();
+                    //const leadSales = new roleQuery(5)
+                    //leadSales.runSearch();
+                    searchLawyer();
                     break;
                 case "Salesperson":
                     roleQuery();
                     break;
                 case "Lead Developer":
-                    roleQeury();
+                    roleQuery();
                     break;
                 case "Developer":
                     roleQuery();
                     break;
                 case "Lawyer":
-                    roleQuery();
+                    searchLawyer();
                     break;
                 case "Go Back":
                     start();
@@ -169,20 +171,28 @@ function viewRoles() {
         })
 }
 
-function roleQuery() {
-    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.title = ?"; 
+function searchLawyer() {
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.id = ?";
+    
+    connection.query(query, [4], function (err, res) {
+        if (err) throw err;
+        console.table([], res);
+    })
+}
+//function roleQuery() {
+   // var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.title = ?"; 
 
    // const choice = {
      //   choice: role.choices.val()
     //}
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
-        console.table([], res);
-    });
+    //connection.query(query, function (err, res) {
+      //  if (err) throw err;
+        //console.table([], res);
+    //});
 
-    start();
-}
+    //start();
+//}
 
 
 //---------------SELECTION: ADD EMPLOYEE-----------------------------------

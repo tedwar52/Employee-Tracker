@@ -12,23 +12,23 @@ connection.connect(function(err) {
     if (err) throw err;
 })
 
-function roleQuery(choice) {
-    this.answer = choice
+function roleQuery(number) {
+    this.number = number
 }
 
-roleQuery.prototype.printStats = function() {
-    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.title = ?";
+roleQuery.prototype.runSearch = function() {
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE role.id = ?";
     
-    connection.query(query, { choice }, function (err, res) {
+    connection.query(query,[], function (err, res) {
         if (err) throw err;
         console.table([], res);
     })
 }
 
-const leadSales = new roleQuery("Lead Salesperson");
-const sales = new roleQuery("Salesperson");
-const leadDev = new roleQuery("Lead Developer");
-const dev = new roleQuery("Developer");
-const law = new roleQuery("Lawyer");
+const leadSales = new roleQuery(5);
+const sales = new roleQuery(1);
+const leadDev = new roleQuery(2);
+const dev = new roleQuery(3);
+const law = new roleQuery(4);
 
-module.export = roleQuery;
+module.exports = roleQuery;
