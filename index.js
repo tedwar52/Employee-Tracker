@@ -54,11 +54,9 @@ function start() {
                     break;
 
                 case "View all employees by department":
-                    //Departs.viewDeparts();
                     viewDepartments();
                     break;
                 case "View all employees by role":
-                    //Roles.viewRoles();
                     viewRoles();
                     break;
                 case "Add employee":
@@ -108,13 +106,13 @@ function viewDepartments() {
         .then(function (answer) {
             switch (answer.department) {
                 case "Sales":
-                    viewSales();
+                    viewSales.runSearch();
                     break;
                 case "Legal":
-                    viewLegal();
+                    viewLegal.runSearch();
                     break;
                 case "Development":
-                    viewDevelopment();
+                    viewDev.runSearch();
                     break;
                 case "Go Back":
                     start();
@@ -122,6 +120,21 @@ function viewDepartments() {
                     //consider sending back to previous menu
             }
         });
+        function depQuery(number) {
+            this.number = number;
+        }    
+    
+        depQuery.prototype.runSearch = function () {
+            var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id WHERE department.id = ?";
+    
+            connection.query(query, this.number, function (err, res) {
+                if (err) throw err;
+                console.table([], res);
+            })
+        }
+        const viewSales = new depQuery(1);
+        const viewLegal = new depQuery(2);
+        const viewDev = new depQuery(3);
 }
 
 
@@ -209,7 +222,7 @@ function addEmployee() {
         })
         .then(function (answer) {
             //insert each answer into respective slot of table
-            var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE ?, ?, ?"
+            var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE employee.first_name = ?, employee.last_name = ?, role.title = ?"
             connection.query(query, [{
                     first_name: answer.firstname,
                     last_name: answer.lastname,
@@ -233,7 +246,13 @@ function removeEmployee() {
             type: "input",
             message: "Who would you like to remove? (Search by last name)"
         })
-        .then(function (employeeQuery, answer) {
+        .then(function(answer) {
+            var query = "DELETE FROM employee WHERE ?";
+            connection.query(query, { last_name: answer.who }, function(err, res) {
+                if(err) throw err;
+                console.log("employee deleted!");
+                start();
+            })
             //search by last name
 
             //employeeQuery(answer);
