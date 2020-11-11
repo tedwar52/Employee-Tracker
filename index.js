@@ -207,7 +207,8 @@ function addEmployee() {
     //needs to return input fields
     //first name, last name, role
     inquirer
-        .prompt({
+        .prompt([
+        {
             name: "firstname",
             type: "input",
             message: "What is their first name?"
@@ -218,22 +219,24 @@ function addEmployee() {
         }, {
             name: "title",
             type: "input",
-            message: "What is their title? (Salesperson, Lead Salesperson, Developer, Lead Developer, or Lawyer)"
-        })
+            message: "What is their title? (Please enter a number! -- Salesperson[1], Lead Developer[2], Developer[3], Lawyer[4], Lead Salesperson[5])"
+        }
+    ])
         .then(function (answer) {
             //insert each answer into respective slot of table
-            var query = "INSERT INTO employee.first_name, employee.last_name, role.title WHERE employee.first_name = ?, employee.last_name = ?, role.title = ?"
+            var query = "INSERT INTO employee SET ?";
             connection.query(query, [{
                     first_name: answer.firstname,
                     last_name: answer.lastname,
-                    role: answer.title
+                    role_id: answer.title
                 }],
                 function (err, res) {
                     if (err) throw err;
+                    console.log("Employee added!");
+                    viewEmployees();
                 });
 
-            //display all employees
-            viewEmployees();
+            start();
         });
 }
 
@@ -276,8 +279,8 @@ function employeeQuery() {
         .prompt({
             name: "changeTitle",
             type: "input",
-            message: "Which employee would you like to look up? (Search by last name)"
-            //choices: [{employees}]
+            message: "Which employee would you like to look up? (Search by last name)",
+            choices: employees
         })
         .then(function (answer) {
             //search by last name
@@ -287,6 +290,7 @@ function employeeQuery() {
             }], function (err, res) {
                 if (err) throw err;
                 console.table(res[0]);
+                //const person = res.last_name;
                 updateRole();
                 if (res[0] == undefined) {
                     console.log("No employee found by that name!");
@@ -303,62 +307,67 @@ function employeeQuery() {
     //}]
     //return updated database 
     //viewEmployees();
+
+    function updateRole() {
+        inquirer
+            .prompt({
+                name: "change",
+                type: "list",
+                message: "What is this employee's new role?",
+                choices: [
+                    "Salesperson",
+                    "Lead Salesperson",
+                    "Developer",
+                    "Lead Developer",
+                    "Lawyer"
+                ]
+            })
+            .then(function (answer) {
+                switch (answer.change) {
+                    case "Salesperson":
+                        //SELECT CHOICE AGAIN
+                        //connection.query("UPDATE title WHERE department = ?", [1], function (err, res) {
+                            //if (err) throw err;
+                            //console.log("Employer updated!");
+                            //start();
+                        //});
+                        changeSales.changeTitle();
+                        break;
+                    case "Lead Salesperson":
+                        connection.query("UPDATE title WHERE department = ?" [5], function (err, res) {
+                            if (err) throw err;
+                            console.log("Employer updated!");
+                            start();
+                        });
+                        break;
+                    case "Developer":
+                        connection.query("UPDATE title WHERE department = ?" [3], function (err, res) {
+                            if (err) throw err;
+                            console.log("Employer updated!");
+                            start();
+                        });
+                        break;
+                    case "Lead Developer":
+                        connection.query("UPDATE title WHERE department = ?" [2], function (err, res) {
+                            if (err) throw err;
+                            console.log("Employer updated!");
+                            start();
+                        });
+                        break;
+                    case "Lawyer":
+                        connection.query("UPDATE title WHERE department = ?" [4], function (err, res) {
+                            if (err) throw err;
+                            console.log("Employer updated!");
+                            start();
+                        });
+                        break;
+                }
+            });
+    
+    }
 }
 
-function updateRole() {
-    inquirer
-        .prompt({
-            name: "change",
-            type: "list",
-            message: "What is this employee's new role?",
-            choices: [
-                "Salesperson",
-                "Lead Salesperson",
-                "Developer",
-                "Lead Developer",
-                "Lawyer"
-            ]
-        })
-        .then(function (answer) {
-            switch (answer.change) {
-                case "Salesperson":
-                    connection.query("UPDATE title WHERE department = ?", [1], function (err, res) {
-                        if (err) throw err;
-                        console.log("Employer updated!");
-                        start();
-                    });
-                    break;
-                case "Lead Salesperson":
-                    connection.query("UPDATE title WHERE department = ?" [5], function (err, res) {
-                        if (err) throw err;
-                        console.log("Employer updated!");
-                        start();
-                    });
-                    break;
-                case "Developer":
-                    connection.query("UPDATE title WHERE department = ?" [3], function (err, res) {
-                        if (err) throw err;
-                        console.log("Employer updated!");
-                        start();
-                    });
-                    break;
-                case "Lead Developer":
-                    connection.query("UPDATE title WHERE department = ?" [2], function (err, res) {
-                        if (err) throw err;
-                        console.log("Employer updated!");
-                        start();
-                    });
-                    break;
-                case "Lawyer":
-                    connection.query("UPDATE title WHERE department = ?" [4], function (err, res) {
-                        if (err) throw err;
-                        console.log("Employer updated!");
-                        start();
-                    });
-                    break;
-            }
-        });
-}
+
 
 //----------------------------------------------------------------------
 
