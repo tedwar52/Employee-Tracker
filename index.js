@@ -374,8 +374,6 @@ function employeeQuery() {
 //TO DO
 
 //FIX UPDATEROLE() FUNCTION -- broken syntax
-//FIX DELETE FUNCTION (will need a search query and a remove function)
-//CREATE ADD EMPLOYEE FUNCTION
 
 
 //-----------------------------------------------
