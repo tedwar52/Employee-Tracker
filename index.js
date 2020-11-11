@@ -1,10 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-//const Roles = require("./viewRoles.js");
-//const Departs = require("./viewDepartments.js");
-//const employeeQuery = require('./employeesearch.js');
-//const roleQuery = require("./roleQuery.js");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -20,14 +16,9 @@ connection.connect(function (err) {
 });
 
 const table = cTable.getTable({
-    //first_name: "SELECT first_name FROM employee",
-    //last_name: "SELECT last_name FROM employee",
-    //title: "SELECT title FROM role",
-    //department: "SELECT name FROM department",
-    //salary: "SELECT salary FROM role"
 });
 
-//HOW TO RETURN RESULTS AS A TABLE
+
 
 //---------------------START APPLICATION-------------------------------
 
